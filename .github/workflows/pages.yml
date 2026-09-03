@@ -25,6 +25,18 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Prepare site
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='</body>'
+          tag='<script src="inventory.js"></script>'
+          if tag not in s:
+              s=s.replace(marker, tag+'\n'+marker)
+              p.write_text(s,encoding='utf-8')
+          PY
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:

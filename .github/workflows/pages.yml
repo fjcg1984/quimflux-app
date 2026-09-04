@@ -29,12 +29,22 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import base64
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
+
+          # Embed the real QUIMFLUX logo directly in the deployed HTML.
+          logo=Path('logo.png')
+          if logo.exists():
+              data=base64.b64encode(logo.read_bytes()).decode('ascii')
+              data_uri='data:image/png;base64,'+data
+              s=s.replace('src="logo.png"', 'src="'+data_uri+'"')
+
+          # Load the inventory module with a cache-busting version.
           marker='</body>'
-          tag='<script src="inventory.js?v=3"></script>'
-          old='<script src="inventory.js"></script>'
-          s=s.replace(old, tag)
+          tag='<script src="inventory.js?v=4"></script>'
+          import re
+          s=re.sub(r'<script src="inventory\\.js(?:\\?[^\"]*)?">\\</script>', '', s)
           if tag not in s:
               s=s.replace(marker, tag+'\n'+marker)
           p.write_text(s,encoding='utf-8')

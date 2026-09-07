@@ -1,51 +1,6 @@
-import type { KpiProduction } from './schema';
-
-export function statusFrom(value: number | null, good: number, warning: number, inverse = false) {
-  if (value === null || Number.isNaN(value)) return 'neutral';
-  if (inverse) return value <= good ? 'good' : value <= warning ? 'warning' : 'critical';
-  return value >= good ? 'good' : value >= warning ? 'warning' : 'critical';
-}
-
-export function summarizeProduction(rows: KpiProduction[]) {
-  const valid = rows.filter(Boolean);
-  const planned = valid.reduce((s, r) => s + (r.planned_kg ?? 0), 0);
-  const produced = valid.reduce((s, r) => s + (r.produced_kg ?? 0), 0);
-  const rejected = valid.reduce((s, r) => s + (r.rejected_kg ?? 0), 0);
-  const waste = valid.reduce((s, r) => s + (r.waste_kg ?? 0), 0);
-  const labor = valid.reduce((s, r) => s + (r.labor_hours ?? 0), 0);
-  const downtime = valid.reduce((s, r) => s + (r.downtime_minutes ?? 0), 0);
-  const waiting = valid.reduce((s, r) => s + (r.waiting_minutes ?? 0), 0);
-
-  const compliance = planned > 0 ? (produced / planned) * 100 : null;
-  const yieldPct = produced > 0 ? ((produced - rejected - waste) / produced) * 100 : null;
-  const kgPerLaborHour = labor > 0 ? produced / labor : null;
-
-  return {
-    batches: valid.length,
-    planned,
-    produced,
-    rejected,
-    waste,
-    compliance,
-    yieldPct,
-    laborHours: labor,
-    kgPerLaborHour,
-    downtime,
-    waiting,
-  };
-}
-
-export function recommendations(s: ReturnType<typeof summarizeProduction>) {
-  const result: { priority: string; title: string; text: string }[] = [];
-  if (s.compliance !== null && s.compliance < 90)
-    result.push({ priority: 'high', title: 'Bajo cumplimiento', text: 'Revisar plan vs. producción y localizar la etapa que está limitando el flujo.' });
-  if (s.yieldPct !== null && s.yieldPct < 97)
-    result.push({ priority: 'high', title: 'Pérdida de rendimiento', text: 'Separar rechazo y merma por etapa y registrar causa antes de buscar mejoras.' });
-  if (s.downtime > 30)
-    result.push({ priority: 'high', title: 'Paradas relevantes', text: 'Analizar tiempo de parada por etapa y convertir las causas repetitivas en acciones de mantenimiento.' });
-  if (s.waiting > 30)
-    result.push({ priority: 'medium', title: 'Tiempo de espera', text: 'Revisar transferencia entre etapas, disponibilidad de materiales y reasignación de personal.' });
-  if (s.kgPerLaborHour !== null && s.kgPerLaborHour > 0)
-    result.push({ priority: 'info', title: 'Productividad laboral', text: `Productividad actual: ${s.kgPerLaborHour.toFixed(1)} kg/h-hombre. Usar como línea base para comparar turnos y etapas.` });
-  return result;
-}
+import type { KpiProduction, StageEvent, StageKpi } from './schema';
+export type Status = 'good' | 'warning' | 'critical' | 'neutral';
+export function statusFrom(value: number | null, good: number, warning: number, inverse = false): Status { if (value === null || Number.isNaN(value)) return 'neutral'; return inverse ? (value <= good ? 'good' : value <= warning ? 'warning' : 'critical') : (value >= good ? 'good' : value >= warning ? 'warning' : 'critical'); }
+export function summarizeProduction(rows: KpiProduction[]) { const valid=rows.filter(Boolean); const planned=valid.reduce((s,r)=>s+(r.planned_kg??0),0), produced=valid.reduce((s,r)=>s+(r.produced_kg??0),0), rejected=valid.reduce((s,r)=>s+(r.rejected_kg??0),0), waste=valid.reduce((s,r)=>s+(r.waste_kg??0),0), labor=valid.reduce((s,r)=>s+(r.labor_hours??0),0), downtime=valid.reduce((s,r)=>s+(r.downtime_minutes??0),0), waiting=valid.reduce((s,r)=>s+(r.waiting_minutes??0),0), elapsed=valid.reduce((s,r)=>s+(r.elapsed_minutes??0),0); const compliance=planned>0?(produced/planned)*100:null, yieldPct=produced+rejected+waste>0?(produced/(produced+rejected+waste))*100:null, kgPerLaborHour=labor>0?produced/labor:null; return {batches:valid.length,planned,produced,rejected,waste,compliance,yieldPct,laborHours:labor,kgPerLaborHour,downtime,waiting,elapsed,netAvailableMinutes:Math.max(0,elapsed-downtime)}; }
+export function summarizeStages(events: StageEvent[], names: Record<string,string> = {}): StageKpi[] { const groups=new Map<string,StageEvent[]>(); for(const e of events.filter(Boolean)){const a=groups.get(e.stage_id)??[];a.push(e);groups.set(e.stage_id,a);} return [...groups].map(([stage_id,rows])=>{const elapsed=rows.reduce((s,r)=>s+Math.max(0,(new Date(r.ended_at??r.started_at).getTime()-new Date(r.started_at).getTime())/60000),0);const downtime=rows.reduce((s,r)=>s+(r.downtime_minutes??0),0),waiting=rows.reduce((s,r)=>s+(r.waiting_minutes??0),0),labor=rows.reduce((s,r)=>s+(r.operators_count??0)*Math.max(0,(new Date(r.ended_at??r.started_at).getTime()-new Date(r.started_at).getTime())/3600000),0),input=rows.reduce((s,r)=>s+(r.input_kg??0),0),output=rows.reduce((s,r)=>s+(r.output_kg??0),0);return {stage_id,stage_name:names[stage_id]??stage_id,events:rows.length,elapsed_minutes:elapsed,downtime_minutes:downtime,waiting_minutes:waiting,labor_hours:labor,input_kg:input,output_kg:output,kg_per_labor_hour:labor>0?output/labor:null};}).sort((a,b)=>b.elapsed_minutes-a.elapsed_minutes); }
+export function recommendations(s: ReturnType<typeof summarizeProduction>) { const r:{priority:string;title:string;text:string}[]=[]; if(s.compliance!==null&&s.compliance<90)r.push({priority:'high',title:'Bajo cumplimiento',text:'Comparar plan contra producción y revisar qué etapa limita el flujo.'}); if(s.yieldPct!==null&&s.yieldPct<97)r.push({priority:'high',title:'Pérdida de rendimiento',text:'Separar rechazo y merma por etapa y registrar la causa.'}); if(s.downtime>30)r.push({priority:'high',title:'Paradas relevantes',text:'Priorizar causas repetitivas y vincularlas con mantenimiento.'}); if(s.waiting>30)r.push({priority:'medium',title:'Tiempo de espera',text:'Revisar transferencia entre etapas, materiales y reasignación de personal.'}); if(s.kgPerLaborHour!==null&&s.kgPerLaborHour>0)r.push({priority:'info',title:'Productividad laboral',text:`Línea base: ${s.kgPerLaborHour.toFixed(1)} kg/h-hombre.`}); return r; }

@@ -1,21 +1,26 @@
-# QUIMFLUX APP
+# QUIMFLUX KPIS
 
-Plataforma de gestión integral de planta QUIMFLUX.
+Evolución de QUIMFLUX hacia inteligencia operacional de planta.
 
-## Arquitectura inicial
+## Principio
+
+`Datos mínimos → Historia → KPI → Desviación → Diagnóstico → Recomendación → Acción → Resultado`
+
+## Arquitectura
 
 - Frontend estático compatible con GitHub Pages.
-- Supabase independiente para autenticación y datos.
-- Sin dependencia ni sincronización con Excel.
-- Módulos: Dashboard, Inventario, Producción, Costos, Mantenimiento, Contabilidad y KPI/Reportes.
-- Consumo eléctrico deliberadamente fuera del módulo Costos en esta etapa.
+- Supabase independiente: `pmfaguxrtphbbodwseps`.
+- Solo claves publicables en frontend.
+- Registro operativo por lote y por etapa.
+- KPI de cumplimiento, rendimiento, tiempos, paradas, esperas y productividad laboral.
+- Preparado para integrar posteriormente inventario, mantenimiento, calidad, costos y Excel/CSV.
 
-## Supabase
+## Proceso inicial modelado
 
-Proyecto: `lpflmcwwkazdifxqgvbz`
+1. Transferencia de materia prima
+2. Verificación y carga
+3. Mezcla 1
+4. Mezcla 2 / adición de aceite
+5. Trabajo de mesa y producto terminado
 
-Solo se utiliza una clave publicable en el frontend. Nunca colocar claves `service_role` o secretas en el repositorio.
-
-## Estado
-
-MVP visual inicial: login, navegación lateral, dashboard ejecutivo y vistas base de módulos.
+La rama `quimflux-kpis` es el desarrollo nuevo. El repositorio histórico `-quimflux-dashboard-v5` no se modifica.

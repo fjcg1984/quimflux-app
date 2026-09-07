@@ -2,7 +2,7 @@ name: Deploy QUIMFLUX KPIS to GitHub Pages
 
 on:
   push:
-    branches: [quimflux-kpis]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

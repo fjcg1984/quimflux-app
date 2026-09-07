@@ -1,31 +1,163 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QUIMFLUX KPIS</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QUIMFLUX KPIS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--g:#09a56a;--g2:#087d54;--ink:#17201d;--muted:#6c7772;--bg:#f4f7f6;--card:#fff;--line:#dfe7e3;--red:#d83d35;--amber:#c47a10}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Inter,Segoe UI,Arial,sans-serif}.shell{display:grid;grid-template-columns:235px 1fr;min-height:100vh}.side{background:#101716;color:#fff;padding:22px 14px}.logo{width:185px;max-width:100%;margin:0 10px 25px}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#b9c5c1;text-align:left;padding:12px 14px;border-radius:9px;font-weight:700;cursor:pointer}.nav button.active,.nav button:hover{background:var(--g);color:#fff}.main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:2}.top h1{font-size:18px;margin:0}.content{padding:26px;max-width:1500px;margin:auto}.head{display:flex;justify-content:space-between;gap:15px;align-items:end;margin-bottom:20px}.head h2{margin:0 0 5px;font-size:27px}.head p{margin:0;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--g);color:#fff;font-weight:800;cursor:pointer}.btn:hover{background:var(--g2)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px}.metric small{color:var(--muted);text-transform:uppercase;font-weight:800;font-size:11px}.metric strong{display:block;font-size:27px;margin:9px 0 3px}.metric span{color:var(--muted);font-size:12px}.two{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px}.section-title{font-weight:850;margin-bottom:15px}.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fbfcfb;outline:none}.field textarea{min-height:75px;resize:vertical}.stage{border:1px solid var(--line);border-radius:10px;padding:12px;margin:9px 0}.stage h4{margin:0 0 9px}.stagegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.msg{margin-top:10px;font-weight:700}.error{color:var(--red)}.ok{color:var(--g2)}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}.table th{font-size:11px;text-transform:uppercase;color:var(--muted)}.pill{display:inline-block;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:800;background:#e9f7f1;color:var(--g2)}.recommend{border-left:4px solid var(--amber);background:#fffaf1;padding:11px;border-radius:7px;margin:8px 0}.recommend.high{border-left-color:var(--red);background:#fff5f4}.empty{color:var(--muted);padding:18px;text-align:center}.hidden{display:none!important}@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,1fr)}.stagegrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.shell{grid-template-columns:1fr}.side{position:static}.logo{width:150px}.nav{grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid,.formgrid{grid-template-columns:1fr}.top{padding:0 16px}.stagegrid{grid-template-columns:1fr}.head{align-items:start;flex-direction:column}}
-</style></head>
+:root{--g:#09a56a;--g2:#087d54;--ink:#17201d;--muted:#68746f;--bg:#f4f7f6;--card:#fff;--line:#dfe7e3;--red:#c9342b;--amber:#b66d08}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px Segoe UI,Arial,sans-serif}.shell{display:grid;grid-template-columns:235px 1fr;min-height:100vh}.side{background:#101716;color:#fff;padding:22px 14px}.logo{width:185px;max-width:100%;margin:0 10px 25px}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#b9c5c1;text-align:left;padding:13px 14px;border-radius:9px;font-weight:700;cursor:pointer;width:100%}.nav button.active,.nav button:hover{background:var(--g);color:#fff}.main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:2}.top h1{font-size:18px;margin:0}.content{padding:26px;max-width:1500px;margin:auto}.head{display:flex;justify-content:space-between;gap:15px;align-items:end;margin-bottom:20px}.head h2{margin:0 0 5px;font-size:27px}.head p{margin:0;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--g);color:#fff;font-weight:800;cursor:pointer}.btn:hover{background:var(--g2)}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px}.metric small{color:var(--muted);text-transform:uppercase;font-weight:800;font-size:11px}.metric strong{display:block;font-size:27px;margin:9px 0 3px}.metric span{color:var(--muted);font-size:12px}.two{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-top:14px}.section-title{font-weight:850;margin-bottom:15px}.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fbfcfb;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--g)}.field textarea{min-height:75px;resize:vertical}.stage{border:1px solid var(--line);border-radius:10px;padding:12px;margin:9px 0}.stage h4{margin:0 0 9px}.stagegrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.msg{margin-top:10px;font-weight:700}.error{color:var(--red)}.ok{color:var(--g2)}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}.table th{font-size:11px;text-transform:uppercase;color:var(--muted)}.pill{display:inline-block;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:800;background:#e9f7f1;color:var(--g2)}.recommend{border-left:4px solid var(--amber);background:#fffaf1;padding:11px;border-radius:7px;margin:8px 0}.recommend.high{border-left-color:var(--red);background:#fff5f4}.empty{color:var(--muted);padding:18px;text-align:center}.hidden{display:none!important}hr{border:0;border-top:1px solid var(--line);margin:22px 0}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,1fr)}.stagegrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.shell{grid-template-columns:1fr}.side{position:static}.logo{width:150px}.nav{grid-template-columns:repeat(3,1fr)}.content{padding:16px}.grid,.formgrid{grid-template-columns:1fr}.top{padding:0 16px}.stagegrid{grid-template-columns:1fr}.head{align-items:start;flex-direction:column}}
+</style>
+</head>
 <body>
-<div class="shell"><aside class="side"><img class="logo" src="logo.png" alt="QUIMFLUX"><nav class="nav"><button class="active" data-view="dashboard">◉ Dashboard</button><button data-view="registro">＋ Registrar producción</button><button data-view="historial">▤ Historial / KPI</button></nav></aside>
-<main class="main"><header class="top"><h1 id="title">QUIMFLUX KPIS</h1><span id="today"></span></header><div class="content">
-<section id="dashboard"><div class="head"><div><h2>Inteligencia operativa</h2><p>Datos mínimos → Historia → KPI → Desviación → Acción</p></div><button class="btn" onclick="show('registro')">Registrar lote</button></div><div class="grid"><div class="card metric"><small>Lotes</small><strong id="mRuns">—</strong><span>últimos 30 días</span></div><div class="card metric"><small>Producción</small><strong id="mProd">—</strong><span>kg producidos</span></div><div class="card metric"><small>Cumplimiento</small><strong id="mComp">—</strong><span>plan vs real</span></div><div class="card metric"><small>Rendimiento</small><strong id="mYield">—</strong><span>producto útil / total</span></div></div><div class="two"><div class="card"><div class="section-title">Últimos lotes</div><div id="recent" class="tablewrap"></div></div><div class="card"><div class="section-title">Recomendaciones</div><div id="recs"></div></div></div></section>
-<section id="registro" class="hidden"><div class="head"><div><h2>Registrar producción</h2><p>Solo capturamos lo necesario para medir flujo, personas, tiempos y pérdidas.</p></div></div><div class="card"><form id="form"><div class="section-title">1. Lote</div><div class="formgrid"><div class="field"><label>Fecha</label><input name="run_date" type="date" required></div><div class="field"><label>Código de lote</label><input name="batch_code" required placeholder="L-2026-001"></div><div class="field"><label>Producto UUID <small>(opcional)</small></label><input name="product_id" placeholder="dejar vacío si aún no existe catálogo"></div><div class="field"><label>Turno</label><select name="shift"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></div><div class="field"><label>Plan kg</label><input name="planned_kg" type="number" min="0" step="0.01"></div><div class="field"><label>Producido kg</label><input name="produced_kg" type="number" min="0" step="0.01"></div><div class="field"><label>Rechazo kg</label><input name="rejected_kg" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>Merma kg</label><input name="waste_kg" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>Operadores totales</label><input name="operators_total" type="number" min="0" step="1"></div></div><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><div class="section-title">2. Etapas del proceso</div><div id="stages"><div class="empty">Cargando etapas…</div></div><div class="field" style="margin-top:12px"><label>Observaciones</label><textarea name="notes" placeholder="Espera, parada, falta de material, cambio de personal, incidencia, etc."></textarea></div><div id="msg" class="msg"></div><div class="actions"><button type="submit" class="btn">GUARDAR LOTE Y CALCULAR KPI</button></div></form></div></section>
-<section id="historial" class="hidden"><div class="head"><div><h2>Historial y KPI</h2><p>La historia acumulada será la base para detectar desviaciones reales.</p></div></div><div class="card"><div id="history" class="tablewrap"></div></div></section>
-</div></main></div>
+<div class="shell">
+<aside class="side">
+<img class="logo" src="logo.png" alt="QUIMFLUX">
+<nav class="nav" aria-label="Navegación principal">
+<button type="button" data-view="dashboard" class="active">◉ Dashboard</button>
+<button type="button" data-view="registro">＋ Registrar producción</button>
+<button type="button" data-view="historial">▤ Historial / KPI</button>
+</nav>
+</aside>
+<main class="main">
+<header class="top"><h1 id="title">QUIMFLUX KPIS</h1><span id="today"></span></header>
+<div class="content">
+<section id="dashboard">
+<div class="head"><div><h2>Inteligencia operativa</h2><p>Datos mínimos → Historia → KPI → Desviación → Acción</p></div><button type="button" class="btn" id="newLotBtn">Registrar lote</button></div>
+<div class="grid">
+<div class="card metric"><small>Lotes</small><strong id="mRuns">—</strong><span>historia disponible</span></div>
+<div class="card metric"><small>Producción</small><strong id="mProd">—</strong><span>kg producidos</span></div>
+<div class="card metric"><small>Cumplimiento</small><strong id="mComp">—</strong><span>plan vs real</span></div>
+<div class="card metric"><small>Rendimiento</small><strong id="mYield">—</strong><span>producto útil / total</span></div>
+</div>
+<div class="two"><div class="card"><div class="section-title">Últimos lotes</div><div id="recent" class="tablewrap"></div></div><div class="card"><div class="section-title">Recomendaciones</div><div id="recs"></div></div></div>
+</section>
+<section id="registro" class="hidden">
+<div class="head"><div><h2>Registrar producción</h2><p>Capturamos lo necesario para medir flujo, personas, tiempos y pérdidas.</p></div></div>
+<div class="card">
+<form id="productionForm">
+<div class="section-title">1. Lote</div>
+<div class="formgrid">
+<div class="field"><label for="run_date">Fecha</label><input id="run_date" name="run_date" type="date" required></div>
+<div class="field"><label for="batch_code">Código de lote</label><input id="batch_code" name="batch_code" required placeholder="L-2026-001"></div>
+<div class="field"><label for="product_id">Producto UUID <small>(opcional)</small></label><input id="product_id" name="product_id" placeholder="vacío si aún no existe catálogo"></div>
+<div class="field"><label for="shift">Turno</label><select id="shift" name="shift"><option>Mañana</option><option>Tarde</option><option>Noche</option></select></div>
+<div class="field"><label for="planned_kg">Plan kg</label><input id="planned_kg" name="planned_kg" type="number" min="0" step="0.01"></div>
+<div class="field"><label for="produced_kg">Producido kg</label><input id="produced_kg" name="produced_kg" type="number" min="0" step="0.01"></div>
+<div class="field"><label for="rejected_kg">Rechazo kg</label><input id="rejected_kg" name="rejected_kg" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="waste_kg">Merma kg</label><input id="waste_kg" name="waste_kg" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="operators_total">Operadores totales</label><input id="operators_total" name="operators_total" type="number" min="0" step="1"></div>
+</div>
+<hr>
+<div class="section-title">2. Etapas del proceso</div>
+<div id="stages"><div class="empty">Cargando etapas…</div></div>
+<div class="field" style="margin-top:12px"><label for="notes">Observaciones</label><textarea id="notes" name="notes" placeholder="Espera, parada, falta de material, cambio de personal, incidencia, etc."></textarea></div>
+<div id="msg" class="msg" role="status"></div>
+<div class="actions"><button type="submit" class="btn" id="saveBtn">GUARDAR LOTE Y CALCULAR KPI</button></div>
+</form>
+</div>
+</section>
+<section id="historial" class="hidden">
+<div class="head"><div><h2>Historial y KPI</h2><p>La historia acumulada será la base para detectar desviaciones reales.</p></div></div>
+<div class="card"><div id="history" class="tablewrap"></div></div>
+</section>
+</div>
+</main>
+</div>
 <script>
-const URL='https://pmfaguxrtphbbodwseps.supabase.co';
-const KEY='sb_publishable_NbShqOVSEY16hTr2JuiN2A__8_mAI8x';
-const sb=window.supabase.createClient(URL,KEY);
-let stages=[];
+(function(){
+'use strict';
+const SUPABASE_URL='https://pmfaguxrtphbbodwseps.supabase.co';
+const SUPABASE_KEY='sb_publishable_NbShqOVSEY16hTr2JuiN2A__8_mAI8x';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
-function show(view){document.querySelectorAll('section[id]').forEach(x=>x.classList.add('hidden'));$(view).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));$('title').textContent=view==='registro'?'Registrar producción':view==='historial'?'Historial / KPI':'QUIMFLUX KPIS';if(view==='dashboard')loadDashboard();if(view==='historial')loadHistory();}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
-$('today').textContent=new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'});
-async function loadStages(){const {data,error}=await sb.from('qf_process_stages').select('id,code,name,sequence_no').eq('active',true).order('sequence_no');if(error){$('stages').innerHTML='<div class="msg error">No se pudieron cargar las etapas: '+error.message+'</div>';return}stages=data||[];$('stages').innerHTML=stages.map(s=>`<div class="stage"><h4>${s.sequence_no}. ${s.name}</h4><div class="stagegrid"><div class="field"><label>Inicio</label><input data-id="${s.id}" data-f="start" type="datetime-local"></div><div class="field"><label>Fin</label><input data-id="${s.id}" data-f="end" type="datetime-local"></div><div class="field"><label>Personas</label><input data-id="${s.id}" data-f="operators" type="number" min="0" step="1"></div><div class="field"><label>Parada min</label><input data-id="${s.id}" data-f="down" type="number" min="0" value="0"></div><div class="field"><label>Espera min</label><input data-id="${s.id}" data-f="wait" type="number" min="0" value="0"></div></div></div>`).join('')||'<div class="empty">No hay etapas configuradas.</div>'}
-$('form').run_date.value=new Date().toISOString().slice(0,10);
-$('form').onsubmit=async e=>{e.preventDefault();$('msg').textContent='Guardando…';$('msg').className='msg';const f=new FormData(e.target);try{const product=String(f.get('product_id')||'').trim();const {data:run,error}=await sb.from('qf_production_runs').insert({run_date:f.get('run_date'),batch_code:String(f.get('batch_code')).trim(),product_id:product||null,shift:f.get('shift'),planned_kg:Number(f.get('planned_kg'))||null,produced_kg:Number(f.get('produced_kg'))||null,rejected_kg:Number(f.get('rejected_kg'))||0,waste_kg:Number(f.get('waste_kg'))||0,operators_total:Number(f.get('operators_total'))||null,status:'completed',notes:String(f.get('notes')||'').trim()||null}).select().single();if(error)throw error;for(const s of stages){const q=(x)=>e.target.querySelector(`[data-id="${s.id}"][data-f="${x}"]`);if(!q('start').value)continue;const {error:ee}=await sb.from('qf_stage_events').insert({production_run_id:run.id,stage_id:s.id,started_at:new Date(q('start').value).toISOString(),ended_at:q('end').value?new Date(q('end').value).toISOString():null,operators_count:Number(q('operators').value)||null,input_kg:null,output_kg:null,downtime_minutes:Number(q('down').value)||0,waiting_minutes:Number(q('wait').value)||0,notes:null});if(ee)throw ee}$('msg').textContent='Lote guardado correctamente. KPI actualizado.';$('msg').className='msg ok';e.target.reset();e.target.run_date.value=new Date().toISOString().slice(0,10);loadDashboard()}catch(x){$('msg').textContent=x.message||'No se pudo guardar';$('msg').className='msg error'}};
-async function loadDashboard(){const {data,error}=await sb.from('qf_kpi_production').select('*').order('run_date',{ascending:false}).limit(100);if(error){$('recent').innerHTML='<div class="empty">'+error.message+'</div>';return}const rows=data||[];const prod=rows.reduce((a,r)=>a+(Number(r.produced_kg)||0),0),plan=rows.reduce((a,r)=>a+(Number(r.planned_kg)||0),0),den=rows.reduce((a,r)=>a+(Number(r.produced_kg)||0)+(Number(r.rejected_kg)||0)+(Number(r.waste_kg)||0),0);$('mRuns').textContent=rows.length;$('mProd').textContent=Math.round(prod).toLocaleString('es-PE')+' kg';$('mComp').textContent=(plan?((prod/plan)*100).toFixed(1):'—')+'%';$('mYield').textContent=(den?((prod/den)*100).toFixed(1):'—')+'%';$('recent').innerHTML=rows.slice(0,8).map(r=>`<table class="table"><tr><td><b>${r.run_date}</b></td><td>${r.batch_code||'—'}</td><td>${Number(r.produced_kg||0).toLocaleString('es-PE')} kg</td><td><span class="pill">${Number(r.yield_pct||0).toFixed(1)}%</span></td></tr></table>`).join('')||'<div class="empty">Todavía no hay producción registrada.</div>';const rec=[];const comp=plan?prod/plan*100:null;const y=den?prod/den*100:null;if(comp!==null&&comp<90)rec.push(['high','Bajo cumplimiento','Revisar la etapa que está limitando el flujo y comparar tiempos reales contra el estándar.']);if(y!==null&&y<97)rec.push(['high','Pérdida de rendimiento','Separar rechazo y merma por etapa y registrar la causa.']);const down=rows.reduce((a,r)=>a+(Number(r.downtime_minutes)||0),0);const wait=rows.reduce((a,r)=>a+(Number(r.waiting_minutes)||0),0);if(down>30)rec.push(['high','Paradas relevantes','Clasificar las causas repetitivas y vincularlas con mantenimiento.']);if(wait>30)rec.push(['','Tiempo de espera','Revisar transferencia de materiales y reasignación de personal.']);$('recs').innerHTML=rec.map(x=>`<div class="recommend ${x[0]}"><b>${x[1]}</b><div>${x[2]}</div></div>`).join('')||'<div class="empty">Sin desviaciones relevantes con la historia disponible.</div>'}
-async function loadHistory(){const {data,error}=await sb.from('qf_kpi_production').select('*').order('run_date',{ascending:false}).limit(200);if(error){$('history').innerHTML='<div class="empty">'+error.message+'</div>';return}$('history').innerHTML='<table class="table"><thead><tr><th>Fecha</th><th>Lote</th><th>Plan</th><th>Producido</th><th>Cumplimiento</th><th>Rendimiento</th><th>Tiempo</th><th>Espera</th><th>Mano de obra</th><th>kg/h-h</th></tr></thead><tbody>'+(data||[]).map(r=>`<tr><td>${r.run_date}</td><td>${r.batch_code||'—'}</td><td>${r.planned_kg||0}</td><td>${r.produced_kg||0}</td><td>${r.compliance_pct==null?'—':Number(r.compliance_pct).toFixed(1)+'%'}</td><td>${r.yield_pct==null?'—':Number(r.yield_pct).toFixed(1)+'%'}</td><td>${Number(r.elapsed_minutes||0).toFixed(0)} min</td><td>${Number(r.waiting_minutes||0).toFixed(0)} min</td><td>${Number(r.labor_hours||0).toFixed(1)} h</td><td>${r.kg_per_labor_hour==null?'—':Number(r.kg_per_labor_hour).toFixed(1)}</td></tr>`).join('')+'</tbody></table>'}
-loadStages();loadDashboard();
-</script></body></html>
+let stages=[];
+function today(){return new Date().toISOString().slice(0,10)}
+function setView(view){
+ document.querySelectorAll('section[id]').forEach(section=>section.classList.add('hidden'));
+ const target=$(view); if(!target)return;
+ target.classList.remove('hidden');
+ document.querySelectorAll('.nav button[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
+ $('title').textContent=view==='registro'?'Registrar producción':view==='historial'?'Historial / KPI':'QUIMFLUX KPIS';
+ if(view==='dashboard')loadDashboard();
+ if(view==='historial')loadHistory();
+ if(view==='registro')loadStages();
+}
+async function loadStages(){
+ const box=$('stages');
+ box.innerHTML='<div class="empty">Cargando etapas…</div>';
+ const result=await db.from('qf_process_stages').select('id,code,name,sequence_no').eq('active',true).order('sequence_no',{ascending:true});
+ if(result.error){box.innerHTML='<div class="msg error">No se pudieron cargar las etapas: '+escapeHtml(result.error.message)+'</div>';return}
+ stages=result.data||[];
+ if(!stages.length){box.innerHTML='<div class="empty">No hay etapas configuradas.</div>';return}
+ box.innerHTML=stages.map(s=>'<div class="stage"><h4>'+escapeHtml(String(s.sequence_no))+'. '+escapeHtml(s.name)+'</h4><div class="stagegrid">'+field(s.id,'start','Inicio','datetime-local')+field(s.id,'end','Fin','datetime-local')+field(s.id,'operators','Personas','number','min="0" step="1"')+field(s.id,'down','Parada min','number','min="0" step="0.01" value="0"')+field(s.id,'wait','Espera min','number','min="0" step="0.01" value="0"')+'</div></div>').join('');
+}
+function field(id,name,label,type,extra){return '<div class="field"><label>'+label+'</label><input data-stage="'+id+'" data-field="'+name+'" type="'+type+'" '+(extra||'')+'></div>'}
+function getStageInput(stageId,name){return document.querySelector('[data-stage="'+stageId+'"][data-field="'+name+'"]')}
+async function saveProduction(event){
+ event.preventDefault();
+ const form=event.currentTarget, msg=$('msg'), save=$('saveBtn');
+ if(!form.reportValidity())return;
+ msg.textContent='Guardando lote…';msg.className='msg';save.disabled=true;
+ try{
+  const value=name=>form.elements[name].value;
+  const product=String(value('product_id')||'').trim();
+  const payload={run_date:value('run_date'),batch_code:String(value('batch_code')).trim(),product_id:product||null,shift:value('shift'),planned_kg:numOrNull(value('planned_kg')),produced_kg:numOrNull(value('produced_kg')),rejected_kg:numOrZero(value('rejected_kg')),waste_kg:numOrZero(value('waste_kg')),operators_total:intOrNull(value('operators_total')),status:'completed',notes:String(value('notes')||'').trim()||null};
+  const inserted=await db.from('qf_production_runs').insert(payload).select('id').single();
+  if(inserted.error)throw inserted.error;
+  for(const s of stages){
+   const start=getStageInput(s.id,'start');
+   if(!start||!start.value)continue;
+   const end=getStageInput(s.id,'end');
+   const row={production_run_id:inserted.data.id,stage_id:s.id,started_at:new Date(start.value).toISOString(),ended_at:end&&end.value?new Date(end.value).toISOString():null,operators_count:intOrNull(getStageInput(s.id,'operators')?.value),input_kg:null,output_kg:null,downtime_minutes:numOrZero(getStageInput(s.id,'down')?.value),waiting_minutes:numOrZero(getStageInput(s.id,'wait')?.value),notes:null};
+   const eventInsert=await db.from('qf_stage_events').insert(row);
+   if(eventInsert.error)throw eventInsert.error;
+  }
+  msg.textContent='✓ Lote guardado correctamente. Los KPI se actualizarán con este registro.';msg.className='msg ok';
+  form.reset();$('run_date').value=today();
+  await loadDashboard();
+ }catch(error){msg.textContent='No se pudo guardar: '+(error?.message||String(error));msg.className='msg error'}finally{save.disabled=false}
+}
+function numOrNull(v){const n=Number(v);return v!==''&&Number.isFinite(n)?n:null}
+function numOrZero(v){const n=Number(v);return Number.isFinite(n)?n:0}
+function intOrNull(v){const n=parseInt(v,10);return v!==''&&Number.isFinite(n)?n:null}
+async function loadDashboard(){
+ const result=await db.from('qf_kpi_production').select('*').order('run_date',{ascending:false}).limit(100);
+ if(result.error){$('recent').innerHTML='<div class="msg error">'+escapeHtml(result.error.message)+'</div>';return}
+ const rows=result.data||[];
+ const prod=rows.reduce((a,r)=>a+numOrZero(r.produced_kg),0),plan=rows.reduce((a,r)=>a+numOrZero(r.planned_kg),0),den=rows.reduce((a,r)=>a+numOrZero(r.produced_kg)+numOrZero(r.rejected_kg)+numOrZero(r.waste_kg),0);
+ $('mRuns').textContent=rows.length;$('mProd').textContent=Math.round(prod).toLocaleString('es-PE')+' kg';$('mComp').textContent=plan?(prod/plan*100).toFixed(1)+'%':'—';$('mYield').textContent=den?(prod/den*100).toFixed(1)+'%':'—';
+ $('recent').innerHTML=rows.slice(0,8).map(r=>'<table class="table"><tr><td><b>'+escapeHtml(r.run_date||'—')+'</b></td><td>'+escapeHtml(r.batch_code||'—')+'</td><td>'+numOrZero(r.produced_kg).toLocaleString('es-PE')+' kg</td><td><span class="pill">'+numOrZero(r.yield_pct).toFixed(1)+'%</span></td></tr></table>').join('')||'<div class="empty">Todavía no hay producción registrada.</div>';
+ const rec=[];const comp=plan?prod/plan*100:null,y=den?prod/den*100:null;const down=rows.reduce((a,r)=>a+numOrZero(r.downtime_minutes),0),wait=rows.reduce((a,r)=>a+numOrZero(r.waiting_minutes),0);
+ if(comp!==null&&comp<90)rec.push(['high','Bajo cumplimiento','Revisar la etapa que está limitando el flujo y comparar tiempos reales contra el estándar.']);
+ if(y!==null&&y<97)rec.push(['high','Pérdida de rendimiento','Separar rechazo y merma por etapa y registrar la causa.']);
+ if(down>30)rec.push(['high','Paradas relevantes','Clasificar las causas repetitivas y vincularlas con mantenimiento.']);
+ if(wait>30)rec.push(['','Tiempo de espera','Revisar transferencia de materiales y reasignación de personal.']);
+ $('recs').innerHTML=rec.map(x=>'<div class="recommend '+x[0]+'"><b>'+x[1]+'</b><div>'+x[2]+'</div></div>').join('')||'<div class="empty">Sin desviaciones relevantes con la historia disponible.</div>';
+}
+async function loadHistory(){
+ const box=$('history');box.innerHTML='<div class="empty">Cargando historial…</div>';
+ const result=await db.from('qf_kpi_production').select('*').order('run_date',{ascending:false}).limit(200);
+ if(result.error){box.innerHTML='<div class="msg error">'+escapeHtml(result.error.message)+'</div>';return}
+ const rows=result.data||[];
+ if(!rows.length){box.innerHTML='<div class="empty">Todavía no hay producción registrada.</div>';return}
+ box.innerHTML='<table class="table"><thead><tr><th>Fecha</th><th>Lote</th><th>Plan kg</th><th>Producido kg</th><th>Cumplimiento</th><th>Rendimiento</th><th>Parada</th><th>Espera</th><th>HH</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escapeHtml(r.run_date||'—')+'</td><td>'+escapeHtml(r.batch_code||'—')+'</td><td>'+fmt(r.planned_kg)+'</td><td>'+fmt(r.produced_kg)+'</td><td>'+fmtPct(r.compliance_pct)+'</td><td>'+fmtPct(r.yield_pct)+'</td><td>'+fmt(r.downtime_minutes)+'</td><td>'+fmt(r.waiting_minutes)+'</td><td>'+fmt(r.labor_hours)+'</td></tr>').join('')+'</tbody></table>';
+}
+function fmt(v){return v==null?'—':Number(v).toLocaleString('es-PE',{maximumFractionDigits:2})}
+function fmtPct(v){return v==null?'—':Number(v).toFixed(1)+'%'}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.addEventListener('DOMContentLoaded',function(){
+ $('today').textContent=new Date().toLocaleDateString('es-PE',{day:'2-digit',month:'short',year:'numeric'});
+ $('run_date').value=today();
+ document.querySelectorAll('.nav button[data-view]').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
+ $('newLotBtn').addEventListener('click',()=>setView('registro'));
+ $('productionForm').addEventListener('submit',saveProduction);
+ loadDashboard();
+});
+})();
+</script>
+</body>
+</html>

@@ -42,3 +42,16 @@ export type KpiProduction = {
   labor_hours: number;
   kg_per_labor_hour: number | null;
 };
+
+export type StageKpi = {
+  stage_id: string;
+  stage_name: string;
+  events: number;
+  elapsed_minutes: number;
+  downtime_minutes: number;
+  waiting_minutes: number;
+  labor_hours: number;
+  input_kg: number;
+  output_kg: number;
+  kg_per_labor_hour: number | null;
+};
